@@ -1,0 +1,13 @@
+{
+    "client": {
+        "settings": {
+            "width": 1200,
+            "height": 600,
+            "defaults": {
+                "width": 1200,
+                "height": 600
+            }
+        },
+        "username": null
+    }
+}
