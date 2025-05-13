@@ -46,11 +46,7 @@ void NetworkServer::enetEventLoop() {
                           << m_enetEvent.peer->address.port << '\n';
                 break;
             case ENET_EVENT_TYPE_RECEIVE:
-                std::cout << "package length: " << m_enetEvent.packet->dataLength
-                          << " containing: " << m_enetEvent.packet->data << " from: " << m_enetEvent.peer->data
-                          << " channel: " << m_enetEvent.channelID << '\n';
-                // destroy packet now that we are done using it
-                enet_packet_destroy(m_enetEvent.packet);
+                handlePacket();
                 break;
             case ENET_EVENT_TYPE_DISCONNECT:
                 std::cout << m_enetEvent.peer->data << " disconnected \n";
@@ -60,4 +56,11 @@ void NetworkServer::enetEventLoop() {
                 break;
         }
     }
+}
+
+void NetworkServer::handlePacket() {
+    std::cout << "package length: " << m_enetEvent.packet->dataLength << " containing: " << m_enetEvent.packet->data
+              << " from: " << m_enetEvent.peer->data << " channel: " << m_enetEvent.channelID << '\n';
+    // destroy packet now that we are done using it
+    enet_packet_destroy(m_enetEvent.packet);
 }

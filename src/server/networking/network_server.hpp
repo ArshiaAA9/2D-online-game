@@ -3,6 +3,8 @@
 
 #include <iostream>
 
+#include "../../common/packet_types.hpp"
+
 class NetworkServer {
 public:
     NetworkServer() {
@@ -22,6 +24,8 @@ public:
     void enetEventLoop();
 
 private:
+    void handlePacket();
+
     // CHANGEABLE CODE DEPENDING ON HOW SCOKETS AND COMMUNICATION BETWEEN SERVER AND CLIENTS WORK
     ENetAddress m_enetAddress;
     ENetHost* m_enetServer = nullptr;
