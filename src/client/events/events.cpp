@@ -4,8 +4,6 @@
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_video.h>
 
-#include <iostream>
-
 #include "../game/game.hpp"
 #include "SunnyEngine/Types.h"
 

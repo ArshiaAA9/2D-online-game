@@ -5,15 +5,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Library configuration
-set(SUNNY_ENGINE_DIR "/home/arshia/.local")
-set(SUNNY_ENGINE_LIB "${SUNNY_ENGINE_DIR}/lib/libSunnyEngine.a")  # Full correct path
-
-# Verify library exists
-if(NOT EXISTS ${SUNNY_ENGINE_LIB})
-    message(FATAL_ERROR "SunnyEngine library not found at: ${SUNNY_ENGINE_LIB}")
-endif()
-
 # Source directories
 set(SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")
 set(CLIENT_DIR "${SOURCE_DIR}/client")
@@ -24,12 +15,13 @@ set(COMMON_DIR "${SOURCE_DIR}/common")
 find_package(nlohmann_json REQUIRED)
 find_package(SDL3 REQUIRED)
 find_package(SDL3_ttf REQUIRED)
+find_package(SunnyEngine REQUIRED)
 
 # Find ENet using pkg-config
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(ENET REQUIRED libenet)
 if(NOT ENET_FOUND)
-    message(FATAL_ERROR "ENet not found. Ensure ENet is installed (e.g., 'sudo pacman -S enet').")
+    message(FATAL_ERROR "ENet not found. Ensure ENet is installed.")
 endif()
 
 #------------------CLIENT------------------
@@ -49,17 +41,15 @@ target_include_directories(TrashFight PRIVATE
     ${CLIENT_DIR}
     ${COMMON_DIR}
     ${SERVER_DIR}
-    ${SUNNY_ENGINE_DIR}/include  # Headers should be in include/SunnyEngine/
 )
 
 target_link_libraries(TrashFight PRIVATE
-    ${SUNNY_ENGINE_LIB}  # Use full path variable
+    SunnyEngine::SunnyEngine
     nlohmann_json::nlohmann_json
     SDL3::SDL3 
     SDL3_ttf::SDL3_ttf
     ${ENET_LIBRARIES}
 )
-
 #------------------SERVER------------------
 file(GLOB SERVER_SOURCES
     "${SERVER_DIR}/main.cpp"
@@ -77,6 +67,7 @@ target_include_directories(TrashFightServer PRIVATE
 
 target_link_libraries(TrashFightServer PRIVATE
     ${ENET_LIBRARIES}
+    SunnyEngine::SunnyEngine
     SDL3::SDL3 # Needed for rendering/events
 )
 
@@ -87,9 +78,4 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 target_compile_options(TrashFight PRIVATE -Wall -Wextra -O2)
 target_compile_options(TrashFightServer PRIVATE -Wall -Wextra -O2)
 
-
-
-
-
-
-
+#cmake .. -DCMAKE_PREFIX_PATH=/home/arshia/.local

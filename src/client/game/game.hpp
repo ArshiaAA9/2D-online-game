@@ -1,13 +1,8 @@
 #pragma once
 
-#include <SunnyEngine/Physics.h>
-
-#include <iostream>
-
 #include "../events/events.hpp"
 #include "../rendering/renderer.hpp"
 #include "../settings/settings.hpp"
-#include "SunnyEngine/Types.h"
 
 class Game {
 public:

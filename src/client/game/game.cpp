@@ -2,11 +2,7 @@
 
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_pixels.h>
-
-#include <iostream>
-
-#include "SunnyEngine/GridPartition.h"
-#include "SunnyEngine/Types.h"
+#include <SunnyEngine/Physics.h>
 
 //-------------------MAIN GAME LOOP-------------------
 void Game::start() {

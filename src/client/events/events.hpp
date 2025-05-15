@@ -2,8 +2,6 @@
 
 #include <SDL3/SDL_events.h>
 
-#include <iostream>
-
 class Game;
 class Sdl;
 
