@@ -26,7 +26,7 @@ bool Renderer::initTTF() {
         return false;
     }
     // set the font
-    m_font = TTF_OpenFont("/home/arshia/coding/trash-fight/src/client/assets/fonts/Comic_Neue/ComicNeue-Bold.ttf", 24);
+    m_font = TTF_OpenFont("/home/arshia/coding/trash-fight/src/assets/fonts/Comic_Neue/ComicNeue-Bold.ttf", 24);
     if (!m_font) {
         std::cerr << "Failed to load font: " << SDL_GetError() << std::endl;
     }

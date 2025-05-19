@@ -4,8 +4,11 @@
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_video.h>
 
+#include <memory>
+
 #include "SunnyEngine/Types.h"
 #include "game.hpp"
+#include "network/network.hpp"
 
 bool Events::loop() {
     while (SDL_PollEvent(&m_sdlEvent)) {
@@ -45,6 +48,9 @@ void Events::keydownEvents() {
             break;
         case SDLK_SPACE:
             m_game.stopObject(mainChar);
+            break;
+        case SDLK_T:
+            m_game.startServer(55555);
             break;
     }
 }

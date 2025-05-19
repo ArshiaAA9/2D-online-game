@@ -7,7 +7,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Source directories
 set(SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")
-set(CLIENT_DIR "${SOURCE_DIR}/client")
 
 # Find dependencies
 find_package(nlohmann_json REQUIRED)
@@ -24,14 +23,15 @@ endif()
 
 #------------------CLIENT------------------
 # Client sources
-file(GLOB_RECURSE CLIENT_SOURCES CONFIGURE_DEPENDS
-    ${CLIENT_DIR}/*.cpp
+file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
+    ${SOURCE_DIR}/*.cpp
+    ${SOURCE_DIR}/network/*.cpp
 )
 
-add_executable(TrashFight ${CLIENT_SOURCES})
+add_executable(TrashFight ${SOURCES})
 
 target_include_directories(TrashFight PRIVATE 
-    ${CLIENT_DIR}
+    ${SOURCE_DIR}
 )
 
 target_link_libraries(TrashFight PRIVATE

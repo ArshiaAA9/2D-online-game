@@ -1,8 +1,13 @@
 #pragma once
 
+#include <cstdint>
+#include <memory>
+
 #include "events.hpp"
+#include "network/network.hpp"
 #include "renderer.hpp"
 #include "settings.hpp"
+#include "types.hpp"
 
 class Game {
 public:
@@ -34,7 +39,16 @@ public:
     void moveObjectTo(SE::ObjectPtr object, SE::Vector2 position);
     void stopObject(SE::ObjectPtr object);
 
+    // Network
+    bool startServer(uint16_t port);
+    bool connectToHost();
+
 private:
+    // used for polymorphism. can either be NetworkServer or NetworkClient
+    std::unique_ptr<Network> m_network;
+    // set this to the corresponding type after creating NetworkClient or NetworkServer and use this to check different
+    // things
+    networkType m_networkType = networkType::Network;
     Settings m_settings; // Must be initialized first
 
     // GAME RELATED MEMBERS:

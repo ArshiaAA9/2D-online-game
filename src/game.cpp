@@ -4,10 +4,17 @@
 #include <SDL3/SDL_pixels.h>
 #include <SunnyEngine/Physics.h>
 
+#include <cstdint>
+#include <memory>
+
+#include "network/network_client.hpp"
+#include "network/network_server.hpp"
+#include "types.hpp"
+
 //-------------------MAIN GAME LOOP-------------------
 void Game::start() {
     // phyiscs:
-    m_world.setGravity(SE::Vector2(0, -50));
+    m_world.setGravity(SE::Vector2(0, 0));
     float dt = 1.0f / 60.0f;
     float delay = 1000.0f / 60.0f;
     // main character TODO:
@@ -48,3 +55,16 @@ void Game::moveObject(SE::ObjectPtr object, SE::Vector2 amount) { object->applyF
 void Game::stopObject(SE::ObjectPtr object) { object->setVelocity(SE::Vector2(0, 0)); }
 
 void Game::moveObjectTo(SE::ObjectPtr object, SE::Vector2 position) { object->transform.moveTo(position); }
+
+//----------------------NETWORK----------------------
+// TODO: apparantly can use the visitor pattern or downcast to use child specific method
+//
+bool Game::startServer(uint16_t port) {
+    m_network = std::make_unique<NetworkServer>();
+    return m_network->start();
+}
+
+bool Game::connectToHost() {
+    m_network = std::make_unique<NetworkClient>();
+    return m_network->start();
+}
