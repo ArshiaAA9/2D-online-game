@@ -4,8 +4,8 @@
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_video.h>
 
-#include "../game/game.hpp"
 #include "SunnyEngine/Types.h"
+#include "game.hpp"
 
 bool Events::loop() {
     while (SDL_PollEvent(&m_sdlEvent)) {

@@ -1,0 +1,8 @@
+[
+    {
+        "directory": "/home/arshia/coding/trash-fight/build",
+        "command": "/bin/c++  -I/home/arshia/coding/trash-fight/src/client -I/home/arshia/coding/trash-fight/src/common -I/home/arshia/coding/trash-fight/src/server -isystem /home/arshia/.local/include -std=c++17 -Wall -Wextra -O2 -o CMakeFiles/TrashFight.dir/src/client/main.cpp.o -c /home/arshia/coding/trash-fight/src/client/main.cpp",
+        "file": "/home/arshia/coding/trash-fight/src/client/main.cpp",
+        "output": "CMakeFiles/TrashFight.dir/src/client/main.cpp.o"
+    }
+]

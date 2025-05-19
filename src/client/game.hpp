@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../events/events.hpp"
-#include "../rendering/renderer.hpp"
-#include "../settings/settings.hpp"
+#include "events.hpp"
+#include "renderer.hpp"
+#include "settings.hpp"
 
 class Game {
 public:

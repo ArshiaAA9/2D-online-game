@@ -4,7 +4,7 @@
 #include <SunnyEngine/Physics.h>
 #include <bits/stdc++.h> // for std::pair
 
-#include "../settings/settings.hpp"
+#include "settings.hpp"
 
 class Renderer {
 public:

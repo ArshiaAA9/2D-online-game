@@ -17,7 +17,7 @@ public:
 private:
     json getSettingsJson() const;
 
-    std::string m_settingsPath = "/home/arshia/coding/trash-fight/src/client/settings/settings.json";
+    std::string m_settingsPath = "/home/arshia/coding/trash-fight/src/client/settings.json";
     json m_settingsJson;
     int m_width, m_height;
 };
