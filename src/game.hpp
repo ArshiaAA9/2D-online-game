@@ -41,14 +41,13 @@ public:
 
     // Network
     bool startServer(uint16_t port);
-    bool connectToHost();
+    bool startClient();
+    bool connectToHost(const char* ip, uint16_t port);
 
 private:
     // used for polymorphism. can either be NetworkServer or NetworkClient
-    std::unique_ptr<Network> m_network;
-    // set this to the corresponding type after creating NetworkClient or NetworkServer and use this to check different
-    // things
-    networkType m_networkType = networkType::Network;
+    std::unique_ptr<Network> m_network = nullptr;
+
     Settings m_settings; // Must be initialized first
 
     // GAME RELATED MEMBERS:

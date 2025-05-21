@@ -1,5 +1,22 @@
 #include "network_client.hpp"
 
+#include <enet/enet.h>
+
+//---------------------SETTERS/GETTERS--------------------
+const ENetAddress& NetworkClient::getAddress() { return m_serverAddress; }
+
+// TODO: validate the address
+void NetworkClient::setAddress(ENetAddress address) { m_serverAddress = address; }
+
+const ENetPeer& NetworkClient::getPeer() { return *m_enetServerPeer; }
+
+// TODO: validate the peer
+void NetworkClient::setPeer(ENetPeer* peer) { m_enetServerPeer = peer; }
+
+const ENetHost& NetworkClient::getEnetHost() { return *m_enetClient; }
+
+const ENetEvent& NetworkClient::getHostEvent() { return m_enetEvent; }
+
 //---------------------CLIENT--------------------
 bool NetworkClient::start() {
     if (m_enetClient != nullptr) {
@@ -33,29 +50,8 @@ bool NetworkClient::end() {
     return true;
 }
 
-bool NetworkClient::connectToServer(const char* ip) {
-    // TODO: pass ip as a param and save it in settings
-    enet_address_set_host(&m_serverAddress, ip);
-    m_serverAddress.port = 5555;
-    m_enetServerPeer = enet_host_connect(m_enetClient, &m_serverAddress, 2, 0);
-    if (m_enetServerPeer == nullptr) {
-        std::cerr << "error accured while creating peer\n";
-        return false;
-    }
-    if (enet_host_service(m_enetClient, &m_enetEvent, 5000) > 0 && m_enetEvent.type == ENET_EVENT_TYPE_CONNECT) {
-        std::cout << " connected to: " << m_enetEvent.peer->address.host << ':' << m_enetEvent.peer->address.port
-                  << '\n';
-        return true;
-    }
-    std::cerr << "error accured while creating connecting\n";
-    return false;
-}
-
-// TODO: DO THIS
-bool NetworkClient::disconnectFromServer() { return true; }
-
 // TODO: SEND ACTUAL GOOD DATA
-void NetworkClient::sendPacket(SE::Packet packet, ENetPeer* peer) {
+void NetworkClient::sendPacket(const SE::Packet& packet, ENetPeer* peer) {
     ENetPacket* pPacket = enet_packet_create(
         &packet,                  // packet itself
         sizeof(SE::Packet),       // size of the packet. Packet is the struct

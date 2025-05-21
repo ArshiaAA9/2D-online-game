@@ -1,4 +1,5 @@
 #pragma once
+#include <enet/enet.h>
 #include <enet/types.h>
 
 #include <array>
@@ -8,13 +9,20 @@
 
 class NetworkServer : public Network {
 public:
-    NetworkServer(uint16_t port = 5555) {
+    NetworkServer(uint16_t port = 5555)
+        : Network(NetworkType::NetworkServer) {
         m_enetAddress.host = ENET_HOST_ANY;
         m_enetAddress.port = port;
     }
 
-    void setPort(uint16_t port);
-    enet_uint16 getPort();
+    const ENetAddress& getAddress() override;
+    virtual void setAddress(ENetAddress address) override;
+
+    const ENetPeer& getPeer() override;
+    void setPeer(ENetPeer* peer) override;
+
+    const ENetHost& getEnetHost() override;
+    const ENetEvent& getHostEvent() override;
 
     bool start() override;
     bool end() override;
@@ -23,9 +31,10 @@ public:
     bool disconnectPeer();
 
     void pollEvents() override;
-    void sendPacket(SE::Packet packet, ENetPeer* peer) override;
+    void sendPacket(const SE::Packet& packet, ENetPeer* peer) override;
 
 private:
+    void handleConnectedPeer();
     void handlePacket(const ENetPacket* packet) override;
 
     ENetAddress m_enetAddress;

@@ -3,13 +3,14 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_pixels.h>
 #include <SunnyEngine/Physics.h>
+#include <enet/enet.h>
 
 #include <cstdint>
+#include <iostream>
 #include <memory>
 
 #include "network/network_client.hpp"
 #include "network/network_server.hpp"
-#include "types.hpp"
 
 //-------------------MAIN GAME LOOP-------------------
 void Game::start() {
@@ -26,9 +27,27 @@ void Game::start() {
     // EVERYTIME A BIG OBJECT IS ADDED
     m_world.cD.m_grid.updateCellDimensions();
 
+    std::string mode;
+    while (true) {
+        std::cout << "enter mode (s)erver or (c)lient:\n";
+        std::cin >> mode;
+        if (mode == "s") {
+            if (startServer(55555)) break;
+            // handle errors:
+        } else if (mode == "c") {
+            if (startClient()) break;
+            // handle errors:
+        }
+        std::cout << "unvalid input\n";
+    }
+
     // main loop
     while (m_event.loop()) {
+        // check the network events
+        m_network->pollEvents();
+        // update physics
         m_world.step(dt);
+        // update the screen
         m_renderer.update(m_world);
         SDL_Delay(delay);
     }
@@ -60,11 +79,36 @@ void Game::moveObjectTo(SE::ObjectPtr object, SE::Vector2 position) { object->tr
 // TODO: apparantly can use the visitor pattern or downcast to use child specific method
 //
 bool Game::startServer(uint16_t port) {
-    m_network = std::make_unique<NetworkServer>();
+    m_network = std::make_unique<NetworkServer>(port);
     return m_network->start();
 }
 
-bool Game::connectToHost() {
+bool Game::startClient() {
+    if (m_network != nullptr) {
+        std::cerr << "a server or a client already started\n";
+        return false;
+    }
     m_network = std::make_unique<NetworkClient>();
     return m_network->start();
+}
+
+// TODO: CALL THIS FUNCTION IN CORRECT PLACE AND TEST
+bool Game::connectToHost(const char* ip, uint16_t port) {
+    ENetAddress address;
+    enet_address_set_host(&address, ip);
+    address.port = port;
+    ENetHost clientHost = m_network->getEnetHost();
+    ENetEvent clientEvent = m_network->getHostEvent();
+    ENetPeer* pPeer = enet_host_connect(&clientHost, &address, 2, 0);
+    if (pPeer == nullptr) {
+        std::cerr << "error accured while creating peer\n";
+        return false;
+    }
+    if (enet_host_service(&clientHost, &clientEvent, 5000) > 0 && clientEvent.type == ENET_EVENT_TYPE_CONNECT) {
+        std::cout << " connected to: " << clientEvent.peer->address.host << ':' << clientEvent.peer->address.port
+                  << '\n';
+        return true;
+    }
+    std::cerr << "error accured while creating connecting\n";
+    return false;
 }

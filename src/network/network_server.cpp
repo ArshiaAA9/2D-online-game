@@ -1,18 +1,27 @@
 #include "network_server.hpp"
 
+#include <enet/enet.h>
 #include <enet/types.h>
-
-#include <cstdint>
 
 #include "algorithm"
 
+//---------------------SETTERS/GETTERS--------------------
+const ENetAddress& NetworkServer::getAddress() { return m_enetAddress; }
+
+// TODO: validate the address
+void NetworkServer::setAddress(ENetAddress address) { m_enetAddress = address; }
+
+// TODO: COMPLETE THESE
+const ENetPeer& NetworkServer::getPeer() {}
+
+// TODO: COMPLETE THESE
+void NetworkServer::setPeer(ENetPeer* peer) {}
+
+const ENetHost& NetworkServer::getEnetHost() { return *m_enetServer; }
+
+const ENetEvent& NetworkServer::getHostEvent() { return m_enetEvent; }
+
 //---------------------SERVER--------------------
-
-// NOTE: must be used before starting server
-void NetworkServer::setPort(uint16_t port) { m_enetAddress.port = port; }
-
-enet_uint16 NetworkServer::getPort() { return m_enetAddress.port; }
-
 bool NetworkServer::start() {
     if (m_enetServer != nullptr) {
         std::cerr << "Server already running\n";
@@ -46,30 +55,15 @@ bool NetworkServer::end() {
 
 //---------------------LOOPS--------------------
 // TODO: MAKE IT TO RECEVE REAL DATA
+// run this every frame or every other frame
 void NetworkServer::pollEvents() {
     while (enet_host_service(m_enetServer, &m_enetEvent, 0) > 0) {
         switch (m_enetEvent.type) {
-            case ENET_EVENT_TYPE_CONNECT: {
-                // find the first empty array slot (nullptr)
-                auto itr = std::find(m_enetPeers.begin(), m_enetPeers.end(), nullptr);
-                // check if there is available nullptr
-                if (itr != m_enetPeers.end()) {
-                    // replace the nullptr with new peer
-                    *itr = m_enetEvent.peer;
-                    std::cout << "A new client connected from: " << m_enetEvent.peer->address.host << ':'
-                              << m_enetEvent.peer->address.port << '\n';
-                } else {
-                    std::cerr << "max peer amout reached, cant add new peer\n";
-                }
+            case ENET_EVENT_TYPE_CONNECT:
+                handleConnectedPeer();
                 break;
-            }
             case ENET_EVENT_TYPE_RECEIVE:
-                std::cout << "package length: " << m_enetEvent.packet->dataLength
-                          << " containing: " << m_enetEvent.packet->data << " from: " << m_enetEvent.peer->address.host
-                          << ":" << m_enetEvent.peer->address.port << " channel: " << m_enetEvent.channelID << '\n';
                 handlePacket(m_enetEvent.packet);
-                // destroy packet now that we are done using it
-                enet_packet_destroy(m_enetEvent.packet);
                 break;
             case ENET_EVENT_TYPE_DISCONNECT:
                 std::cout << m_enetEvent.peer->data << " disconnected \n";
@@ -81,7 +75,24 @@ void NetworkServer::pollEvents() {
     }
 }
 
+void NetworkServer::handleConnectedPeer() {
+    // find the first empty array slot (nullptr)
+    auto itr = std::find(m_enetPeers.begin(), m_enetPeers.end(), nullptr);
+    // check if there is available nullptr
+    if (itr != m_enetPeers.end()) {
+        // replace the nullptr with new peer
+        *itr = m_enetEvent.peer;
+        std::cout << "A new client connected from: " << m_enetEvent.peer->address.host << ':'
+                  << m_enetEvent.peer->address.port << '\n';
+    } else {
+        std::cerr << "max peer amout reached, cant add new peer\n";
+    }
+}
+
 void NetworkServer::handlePacket(const ENetPacket* packet) {
+    std::cout << "package length: " << m_enetEvent.packet->dataLength << " containing: " << m_enetEvent.packet->data
+              << " from: " << m_enetEvent.peer->address.host << ":" << m_enetEvent.peer->address.port
+              << " channel: " << m_enetEvent.channelID << '\n';
     if (packet->dataLength != sizeof(SE::Packet)) {
         std::cerr << "packet size doesnt match!";
         SE::Packet notifyPacket = SE::Packet("packet size doesnt match!");
@@ -94,6 +105,9 @@ void NetworkServer::handlePacket(const ENetPacket* packet) {
         return;
     }
     SE::Packet newPacket;
+    // destroy packet now that we are done using it
+    enet_packet_destroy(m_enetEvent.packet);
+
     // for reading the packet
     // std::memcpy(&newPacket, packet->data, sizeof(SE::Packet));
     // std::cout << "packet: " << newPacket.type << "\n";
@@ -101,4 +115,7 @@ void NetworkServer::handlePacket(const ENetPacket* packet) {
     // NOTE: might have to use: enet_host_flush(m_enetServer);
 }
 
-void NetworkServer::sendPacket(SE::Packet packet, ENetPeer* peer) {}
+void NetworkServer::sendPacket(const SE::Packet& packet, ENetPeer* peer) {
+    ENetPacket* pPacket = enet_packet_create(&packet, sizeof(packet), ENET_PACKET_FLAG_RELIABLE);
+    enet_peer_send(peer, 0, pPacket);
+}

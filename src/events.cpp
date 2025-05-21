@@ -50,7 +50,7 @@ void Events::keydownEvents() {
             m_game.stopObject(mainChar);
             break;
         case SDLK_T:
-            m_game.startServer(55555);
+            m_game.connectToHost("127.0.0.1", 5555);
             break;
     }
 }
