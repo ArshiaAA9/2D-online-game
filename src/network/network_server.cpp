@@ -3,9 +3,13 @@
 #include <enet/enet.h>
 #include <enet/types.h>
 
+#include <iostream>
+
 #include "algorithm"
 
 //---------------------SETTERS/GETTERS--------------------
+NetworkType NetworkServer::getType() const { return m_networkType; }
+
 const ENetAddress& NetworkServer::getAddress() { return m_enetAddress; }
 
 // TODO: validate the address
@@ -17,7 +21,7 @@ const ENetPeer& NetworkServer::getPeer() {}
 // TODO: COMPLETE THESE
 void NetworkServer::setPeer(ENetPeer* peer) {}
 
-const ENetHost& NetworkServer::getEnetHost() { return *m_enetServer; }
+ENetHost& NetworkServer::getEnetHost() { return *m_enetServer; }
 
 const ENetEvent& NetworkServer::getHostEvent() { return m_enetEvent; }
 
@@ -38,7 +42,7 @@ bool NetworkServer::start() {
         std::cerr << "Error accured while starting ENet server host";
         return false;
     }
-    std::cout << "Server started at port: " << m_enetAddress.port << "\n";
+    std::cout << "Server started at: " << m_enetAddress.host << ":" << m_enetAddress.port << "\n";
     return true;
 }
 
@@ -57,12 +61,15 @@ bool NetworkServer::end() {
 // TODO: MAKE IT TO RECEVE REAL DATA
 // run this every frame or every other frame
 void NetworkServer::pollEvents() {
-    while (enet_host_service(m_enetServer, &m_enetEvent, 0) > 0) {
+    while (enet_host_service(m_enetServer, &m_enetEvent, 100) > 0) {
+        std::cout << "switch\n";
         switch (m_enetEvent.type) {
             case ENET_EVENT_TYPE_CONNECT:
+                std::cout << "connect type\n";
                 handleConnectedPeer();
                 break;
             case ENET_EVENT_TYPE_RECEIVE:
+                std::cout << "receive type\n";
                 handlePacket(m_enetEvent.packet);
                 break;
             case ENET_EVENT_TYPE_DISCONNECT:

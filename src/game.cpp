@@ -94,21 +94,34 @@ bool Game::startClient() {
 
 // TODO: CALL THIS FUNCTION IN CORRECT PLACE AND TEST
 bool Game::connectToHost(const char* ip, uint16_t port) {
+    if (m_network->getType() != NetworkType::NetworkClient) {
+        std::cerr << "cant connect from server\n";
+        return false;
+    }
     ENetAddress address;
-    enet_address_set_host(&address, ip);
+    if (enet_address_set_host_ip(&address, ip) != 0) {
+        std::cerr << "failed setting ip";
+        return false;
+    }
     address.port = port;
-    ENetHost clientHost = m_network->getEnetHost();
+    ENetHost& clientHost = m_network->getEnetHost();
     ENetEvent clientEvent = m_network->getHostEvent();
     ENetPeer* pPeer = enet_host_connect(&clientHost, &address, 2, 0);
     if (pPeer == nullptr) {
         std::cerr << "error accured while creating peer\n";
         return false;
     }
-    if (enet_host_service(&clientHost, &clientEvent, 5000) > 0 && clientEvent.type == ENET_EVENT_TYPE_CONNECT) {
-        std::cout << " connected to: " << clientEvent.peer->address.host << ':' << clientEvent.peer->address.port
-                  << '\n';
-        return true;
+    if (enet_host_service(&clientHost, &clientEvent, 2000) > 0) {
+        if (clientEvent.type == ENET_EVENT_TYPE_CONNECT) {
+            std::cout << " connected to: " << clientEvent.peer->address.host << ':' << clientEvent.peer->address.port
+                      << '\n';
+            enet_host_flush(&clientHost); // Force send immediately
+            m_network->setPeer(pPeer);
+            return true;
+        }
+        std::cout << "couldnt connect\n";
+        return false;
     }
-    std::cerr << "error accured while creating connecting\n";
+    std::cerr << "failed connecting to: " << address.host << ":" << address.port << '\n';
     return false;
 }

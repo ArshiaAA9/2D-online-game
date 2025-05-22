@@ -42,7 +42,7 @@ public:
     // Network
     bool startServer(uint16_t port);
     bool startClient();
-    bool connectToHost(const char* ip, uint16_t port);
+    bool connectToHost(const char* ip = "127.0.0.1", uint16_t port = 55555);
 
 private:
     // used for polymorphism. can either be NetworkServer or NetworkClient

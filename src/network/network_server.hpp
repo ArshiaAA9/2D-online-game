@@ -2,6 +2,7 @@
 #include <enet/enet.h>
 #include <enet/types.h>
 
+#include <algorithm>
 #include <array>
 #include <cstdint>
 
@@ -11,9 +12,12 @@ class NetworkServer : public Network {
 public:
     NetworkServer(uint16_t port = 5555)
         : Network(NetworkType::NetworkServer) {
-        m_enetAddress.host = ENET_HOST_ANY;
+        enet_address_set_host(&m_enetAddress, "127.0.0.1");
         m_enetAddress.port = port;
+        std::cout << "created server at " << m_enetAddress.host << ":" << port << '\n';
     }
+
+    NetworkType getType() const override;
 
     const ENetAddress& getAddress() override;
     virtual void setAddress(ENetAddress address) override;
@@ -21,7 +25,7 @@ public:
     const ENetPeer& getPeer() override;
     void setPeer(ENetPeer* peer) override;
 
-    const ENetHost& getEnetHost() override;
+    ENetHost& getEnetHost() override;
     const ENetEvent& getHostEvent() override;
 
     bool start() override;

@@ -36,7 +36,7 @@ bool Renderer::initTTF() {
 bool Renderer::initRenderer() {
     // create window
     auto widthHeight = m_settings.getWidthHeight();
-    m_window = SDL_CreateWindow("Physics Simulation", widthHeight.first, widthHeight.second, 0);
+    m_window = SDL_CreateWindow("TrashFight", widthHeight.first, widthHeight.second, 0);
     if (!m_window) {
         std::cerr << "Error creating window: " << SDL_GetError() << std::endl;
         return false;

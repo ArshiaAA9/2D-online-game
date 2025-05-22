@@ -11,7 +11,7 @@ Settings::Settings() {
     }
     try {
         m_settingsJson = json::parse(file);
-        std::cout << std::setw(4) << m_settingsJson["client"]["settings"] << '\n';
+        // std::cout << std::setw(4) << m_settingsJson["client"]["settings"] << '\n';
         try {
             m_width = m_settingsJson["client"]["settings"]["width"].get<int>();
             m_height = m_settingsJson["client"]["settings"]["height"].get<int>();

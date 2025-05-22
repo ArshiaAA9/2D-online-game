@@ -2,7 +2,11 @@
 
 #include <enet/enet.h>
 
+#include "network.hpp"
+
 //---------------------SETTERS/GETTERS--------------------
+NetworkType NetworkClient::getType() const { return m_networkType; }
+
 const ENetAddress& NetworkClient::getAddress() { return m_serverAddress; }
 
 // TODO: validate the address
@@ -13,7 +17,7 @@ const ENetPeer& NetworkClient::getPeer() { return *m_enetServerPeer; }
 // TODO: validate the peer
 void NetworkClient::setPeer(ENetPeer* peer) { m_enetServerPeer = peer; }
 
-const ENetHost& NetworkClient::getEnetHost() { return *m_enetClient; }
+ENetHost& NetworkClient::getEnetHost() { return *m_enetClient; }
 
 const ENetEvent& NetworkClient::getHostEvent() { return m_enetEvent; }
 

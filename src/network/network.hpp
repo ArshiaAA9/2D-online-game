@@ -22,14 +22,15 @@ public:
 
     virtual ~Network() { enet_deinitialize(); }
 
+    virtual NetworkType getType() const = 0;
+
     virtual const ENetAddress& getAddress() = 0;
     virtual void setAddress(ENetAddress address) = 0;
 
     virtual const ENetPeer& getPeer() = 0;
     virtual void setPeer(ENetPeer* peer) = 0;
 
-    // no setter gets initialized in start() method
-    virtual const ENetHost& getEnetHost() = 0;
+    virtual ENetHost& getEnetHost() = 0;
     virtual const ENetEvent& getHostEvent() = 0;
 
     virtual bool start() = 0;

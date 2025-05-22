@@ -1,8 +1,8 @@
 {
     "client": {
         "settings": {
-            "width": 1000,
-            "height": 500
+            "width": 500,
+            "height": 250
         },
         "defaults": {
             "width": 1200,

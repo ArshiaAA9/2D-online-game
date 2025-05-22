@@ -29,6 +29,7 @@ struct Packet {
     // chat massage packet constructor
     Packet(std::string msg, int senderPlayerId, int receiverPlayerId)
         : type(CHAT)
+        , msg(msg)
         , senderPlayerId(senderPlayerId)
         , receiverPlayerId(receiverPlayerId) {}
 };

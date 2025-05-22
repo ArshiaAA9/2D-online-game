@@ -8,13 +8,15 @@ public:
     NetworkClient()
         : Network(NetworkType::NetworkClient) {}
 
+    NetworkType getType() const override;
+
     const ENetAddress& getAddress() override;
     virtual void setAddress(ENetAddress address) override;
 
     const ENetPeer& getPeer() override;
     void setPeer(ENetPeer* peer) override;
 
-    const ENetHost& getEnetHost() override;
+    ENetHost& getEnetHost() override;
     const ENetEvent& getHostEvent() override;
 
     bool start() override;
