@@ -1,13 +1,9 @@
 #pragma once
 
-#include <cstdint>
-#include <memory>
-
 #include "events.hpp"
-#include "network/network.hpp"
+#include "network_manager.hpp"
 #include "renderer.hpp"
 #include "settings.hpp"
-#include "types.hpp"
 
 class Game {
 public:
@@ -39,15 +35,9 @@ public:
     void moveObjectTo(SE::ObjectPtr object, SE::Vector2 position);
     void stopObject(SE::ObjectPtr object);
 
-    // Network
-    bool startServer(uint16_t port);
-    bool startClient();
-    bool connectToHost(const char* ip = "127.0.0.1", uint16_t port = 55555);
+    NetworkManager networkManager;
 
 private:
-    // used for polymorphism. can either be NetworkServer or NetworkClient
-    std::unique_ptr<Network> m_network = nullptr;
-
     Settings m_settings; // Must be initialized first
 
     // GAME RELATED MEMBERS:

@@ -27,11 +27,11 @@ public:
 
 private:
     bool connectToServer(const char* ip = "127.0.0.1");
+
     void handlePacket(const ENetPacket* packet) override;
 
     ENetHost* m_enetClient = nullptr;
-    ENetEvent m_enetEvent;
     ENetPeer* m_enetServerPeer = nullptr;
-
+    ENetEvent m_enetEvent;
     ENetAddress m_serverAddress;
 };

@@ -73,7 +73,7 @@ void NetworkServer::pollEvents() {
                 handlePacket(m_enetEvent.packet);
                 break;
             case ENET_EVENT_TYPE_DISCONNECT:
-                std::cout << m_enetEvent.peer->data << " disconnected \n";
+                std::cout << m_enetEvent.peer->data << "disconnected \n";
                 m_enetEvent.peer->data = nullptr;
                 break;
             case ENET_EVENT_TYPE_NONE:

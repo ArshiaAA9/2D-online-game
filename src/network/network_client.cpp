@@ -65,6 +65,26 @@ void NetworkClient::sendPacket(const SE::Packet& packet, ENetPeer* peer) {
     enet_host_flush(m_enetClient);
 }
 
-void NetworkClient::pollEvents() {}
+void NetworkClient::pollEvents() {
+    while (enet_host_service(m_enetClient, &m_enetEvent, 100) > 0) {
+        std::cout << "switch\n";
+        switch (m_enetEvent.type) {
+            case ENET_EVENT_TYPE_CONNECT:
+                std::cout << "connect type\n";
+                break;
+            case ENET_EVENT_TYPE_RECEIVE:
+                std::cout << "receive type\n";
+                handlePacket(m_enetEvent.packet);
+                break;
+            case ENET_EVENT_TYPE_DISCONNECT:
+                std::cout << m_enetEvent.peer->data << "disconnected \n";
+                m_enetEvent.peer->data = nullptr;
+                m_enetServerPeer = nullptr;
+                break;
+            case ENET_EVENT_TYPE_NONE:
+                break;
+        }
+    }
+}
 
 void NetworkClient::handlePacket(const ENetPacket* packet) {}

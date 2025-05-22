@@ -31,9 +31,6 @@ public:
     bool start() override;
     bool end() override;
 
-    bool listenForClients(); // Replaces connectToHost
-    bool disconnectPeer();
-
     void pollEvents() override;
     void sendPacket(const SE::Packet& packet, ENetPeer* peer) override;
 
