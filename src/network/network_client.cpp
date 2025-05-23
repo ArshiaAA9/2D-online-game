@@ -66,7 +66,7 @@ void NetworkClient::sendPacket(const SE::Packet& packet, ENetPeer* peer) {
 }
 
 void NetworkClient::pollEvents() {
-    while (enet_host_service(m_enetClient, &m_enetEvent, 100) > 0) {
+    while (enet_host_service(m_enetClient, &m_enetEvent, 0) > 0) {
         std::cout << "switch\n";
         switch (m_enetEvent.type) {
             case ENET_EVENT_TYPE_CONNECT:

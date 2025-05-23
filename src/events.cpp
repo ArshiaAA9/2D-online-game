@@ -56,5 +56,10 @@ void Events::keydownEvents() {
 }
 
 void Events::mouseButtonUpEvents() {
-    switch (m_sdlEvent.button.button) {}
+    switch (m_sdlEvent.button.button) {
+        case SDL_EVENT_MOUSE_BUTTON_DOWN:
+            break;
+        case SDL_EVENT_MOUSE_BUTTON_UP:
+            break;
+    }
 }

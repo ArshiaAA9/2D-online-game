@@ -1,5 +1,7 @@
 #include "network_manager.hpp"
 
+#include <SunnyEngine/Types.h>
+
 #include <iostream>
 #include <memory>
 
@@ -55,4 +57,12 @@ bool NetworkManager::connectToHost(const char* ip, uint16_t port) {
     return false;
 }
 
-void NetworkManager::networkUpdate() { m_network->pollEvents(); }
+void NetworkManager::sendWorldData() {
+    // TODO: learn serialization and use it to write good packets
+    // then write this method
+}
+
+void NetworkManager::networkUpdate() {
+    m_network->pollEvents();
+    sendWorldData();
+}

@@ -61,8 +61,7 @@ bool NetworkServer::end() {
 // TODO: MAKE IT TO RECEVE REAL DATA
 // run this every frame or every other frame
 void NetworkServer::pollEvents() {
-    while (enet_host_service(m_enetServer, &m_enetEvent, 100) > 0) {
-        std::cout << "switch\n";
+    while (enet_host_service(m_enetServer, &m_enetEvent, 0) > 0) {
         switch (m_enetEvent.type) {
             case ENET_EVENT_TYPE_CONNECT:
                 std::cout << "connect type\n";
@@ -112,6 +111,7 @@ void NetworkServer::handlePacket(const ENetPacket* packet) {
         return;
     }
     SE::Packet newPacket;
+
     // destroy packet now that we are done using it
     enet_packet_destroy(m_enetEvent.packet);
 

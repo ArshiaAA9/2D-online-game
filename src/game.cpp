@@ -5,9 +5,7 @@
 #include <SunnyEngine/Physics.h>
 #include <enet/enet.h>
 
-#include <cstdint>
 #include <iostream>
-#include <memory>
 
 //-------------------MAIN GAME LOOP-------------------
 void Game::start() {
@@ -17,11 +15,10 @@ void Game::start() {
     float delay = 1000.0f / 60.0f;
     // main character TODO:
     const auto& [w, h] = m_settings.getWidthHeight();
-    SDL_FColor mainCharColor = {255, 0, 0, 255};
-    m_mainChar = createRect(w / 2.0f, (h - h / 2.0f), 1, 100, 100, mainCharColor, 0);
+    SDL_FColor mainCharColor = {52, 194, 123, 255};
 
     // NOTE: MUST BE USED BEFORE WORLD AND UPDATED
-    // EVERYTIME A BIG OBJECT IS ADDED
+    // EVERYTIME A BIGGER SIZED OBJECT IS ADDED
     m_world.cD.m_grid.updateCellDimensions();
 
     std::string mode;
@@ -29,11 +26,15 @@ void Game::start() {
         std::cout << "enter mode (s)erver or (c)lient:\n";
         std::cin >> mode;
         if (mode == "s") {
-            if (networkManager.startServer(55555)) break;
-            // handle errors:
+            if (!networkManager.startServer(55555)) {
+                // handle errors:
+            }
+            m_mainChar = createRect(w / 2.0f - 200, (h - h / 2.0f), 1, 100, 100, mainCharColor, 0);
         } else if (mode == "c") {
-            if (networkManager.startClient()) break;
-            // handle errors:
+            if (networkManager.startClient()) {
+                // handle errors:
+            }
+            m_mainChar = createRect(w / 2.0f + 200, (h - h / 2.0f), 1, 100, 100, mainCharColor, 0);
         }
         std::cout << "unvalid input\n";
     }

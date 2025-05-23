@@ -89,7 +89,7 @@ void Renderer::update(SE::PhysicsWorld& world) {
 
 void Renderer::clearScreen() {
     // used to clear screen on each frame render
-    SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, 255); // White background
+    SDL_SetRenderDrawColor(m_renderer, 44, 46, 45, 255); // White background
     SDL_RenderClear(m_renderer);
 }
 

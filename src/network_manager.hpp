@@ -1,5 +1,6 @@
 #pragma once
 #include "network/network.hpp"
+#include "network/packet.hpp"
 
 class NetworkManager {
 public:
@@ -14,6 +15,7 @@ public:
     void networkUpdate();
 
 private:
+    void sendWorldData();
     // used for polymorphism. can either be NetworkServer or NetworkClient
     std::unique_ptr<Network> m_network = nullptr;
 };
